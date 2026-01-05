@@ -62,15 +62,17 @@ namespace HRMS.Database
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Employee>()
-                .HasMany(l => l.leaves)
-                .WithMany(e => e.employees)
-                .UsingEntity(l => l.ToTable("EmployeeLeaves"));
+                .HasMany(e => e.attendance)
+                .WithOne(a => a.employee)
+                .HasForeignKey(a => a.employeeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Employee>()
-                .HasMany(a => a.attendance)
-                .WithMany(e => e.employees)
-                .UsingEntity(a => a.ToTable("EmployeeAttendance"));
-            
+                .HasMany(e => e.leaves)
+                .WithOne(l => l.employee)
+                .HasForeignKey(l => l.employeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             #endregion
 
             base.OnModelCreating(modelBuilder);
